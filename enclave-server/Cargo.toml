@@ -9,6 +9,7 @@ edition = "2021"
 hyper = { version = "0.14", features = ["full"] }
 tokio = { version = "1", features = ["full"] }
 serde_bytes = "0.11"
+clap = { version = "4.0.18", features = ["derive"] }
 
 [dependencies.nsm-driver]
 git = "https://github.com/aws/aws-nitro-enclaves-nsm-api.git"

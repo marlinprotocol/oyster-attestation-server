@@ -18,9 +18,7 @@ pub fn get_attestation_doc() -> Vec<u8> {
     nsm_driver::nsm_exit(nsm_fd);
 
     match response {
-        Response::Attestation {document} => {
-            document
-        }
-        _ => panic!("nsm driver returned invalid response: {:?}", response)
+        Response::Attestation { document } => document,
+        _ => panic!("nsm driver returned invalid response: {:?}", response),
     }
 }
