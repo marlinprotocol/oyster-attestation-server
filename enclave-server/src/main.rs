@@ -1,10 +1,13 @@
 use clap::Parser;
 use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Request, Response, Server};
+use hyper::{Body, Response, Server};
 use std::convert::Infallible;
 use std::net::SocketAddr;
-use std::process;
 use std::str::FromStr;
+use std::error::Error;
+use std::fs::File;
+use std::io::Read;
+
 
 #[path = "lib.rs"]
 mod enclave_server;
@@ -16,33 +19,34 @@ struct Cli {
     /// ip address of the server
     #[arg(short, long)]
     ip_addr: String,
+
+    /// path to public key file
+    #[arg(short, long)]
+    pub_key: String,
 }
 
-async fn serve_attestion_doc(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
-    Ok(Response::new(enclave_server::get_attestation_doc().into()))
-}
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), Box<dyn Error>> {
     let cli = Cli::parse();
 
-    // We'll bind the server to X.X.X.X:X
-    let addr = SocketAddr::from_str(&cli.ip_addr).unwrap_or_else(|e| {
-        eprintln!("failed to create socket address: {}", e);
-        process::exit(1);
-    });
+    let mut file = File::open(cli.pub_key)?;
+    let mut pub_key = [0;32];
+    file.read_exact(&mut pub_key)?;
+    println!("pub key: {:02x?}", pub_key);
 
-    // A `Service` is needed for every connection, so this
-    // creates one from our `serve_attestion_doc` function.
-    let make_svc = make_service_fn(|_conn| async {
-        // service_fn converts our function into a `Service`
-        Ok::<_, Infallible>(service_fn(serve_attestion_doc))
+    let addr = SocketAddr::from_str(&cli.ip_addr)?;
+
+    let make_svc = make_service_fn(move |_conn| {
+        let pub_key = pub_key.clone();
+        let service = service_fn(move |_req| {
+           async move { Ok::<_, Infallible>(Response::<Body>::new(enclave_server::get_attestation_doc(pub_key).into())) }
+        });
+        async move { Ok::<_, Infallible>(service) }
     });
 
     let server = Server::bind(&addr).serve(make_svc);
 
-    // Run this server for... forever!
-    if let Err(e) = server.await {
-        eprintln!("server error: {}", e);
-    }
+    server.await?;
+    Ok(())
 }

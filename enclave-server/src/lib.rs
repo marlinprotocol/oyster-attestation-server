@@ -1,11 +1,11 @@
 use nsm_io::{Request, Response};
 use serde_bytes::ByteBuf;
 
-pub fn get_attestation_doc() -> Vec<u8> {
+pub fn get_attestation_doc(pub_key: [u8;32]) -> Vec<u8> {
     let nsm_fd = nsm_driver::nsm_init();
 
-    let public_key = ByteBuf::from("my super secret key");
-    let hello = ByteBuf::from("hello, world!");
+    let public_key = ByteBuf::from(pub_key);
+    let hello = ByteBuf::from("");
 
     let request = Request::Attestation {
         public_key: Some(public_key),
