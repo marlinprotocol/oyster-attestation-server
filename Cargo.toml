@@ -1,5 +1,5 @@
 [package]
-name = "enclave-server"
+name = "attestation-server"
 version = "0.1.0"
 edition = "2021"
 
@@ -21,3 +21,9 @@ rev = "4f468c4"
 [dependencies.nsm-io]
 git = "https://github.com/aws/aws-nitro-enclaves-nsm-api.git"
 rev = "4f468c4"
+
+[profile.release]
+strip = true
+lto = true
+panic = "abort"
+
