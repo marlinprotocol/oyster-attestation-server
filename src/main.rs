@@ -9,9 +9,6 @@ use clap::Parser;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Response, Server};
 
-#[path = "lib.rs"]
-mod enclave_server;
-
 /// http server for handling attestation document requests
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -39,7 +36,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let make_svc = make_service_fn(move |_conn| {
         let service = service_fn(move |_req| async move {
             Ok::<_, Infallible>(Response::<Body>::new(
-                enclave_server::get_attestation_doc(pub_key).into(),
+                oyster_attestation_server_ed25519::get_attestation_doc(pub_key).into(),
             ))
         });
         async move { Ok::<_, Infallible>(service) }
