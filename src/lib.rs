@@ -1,4 +1,5 @@
-use nsm_io::{Request, Response};
+use aws_nitro_enclaves_nsm_api::api::{Request, Response};
+use aws_nitro_enclaves_nsm_api::driver as nsm_driver;
 use serde::Serialize;
 use serde_bytes::ByteBuf;
 use sysinfo::{System, SystemExt};
