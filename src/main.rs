@@ -37,7 +37,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let addr = SocketAddr::from_str(&cli.ip_addr)?;
 
     let make_svc = make_service_fn(move |_conn| {
-        let pub_key = pub_key.clone();
         let service = service_fn(move |_req| async move {
             Ok::<_, Infallible>(Response::<Body>::new(
                 enclave_server::get_attestation_doc(pub_key).into(),
