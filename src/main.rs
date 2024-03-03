@@ -1,13 +1,13 @@
-use clap::Parser;
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Response, Server};
 use std::convert::Infallible;
-use std::net::SocketAddr;
-use std::str::FromStr;
 use std::error::Error;
 use std::fs::File;
 use std::io::Read;
+use std::net::SocketAddr;
+use std::str::FromStr;
 
+use clap::Parser;
+use hyper::service::{make_service_fn, service_fn};
+use hyper::{Body, Response, Server};
 
 #[path = "lib.rs"]
 mod enclave_server;
@@ -25,13 +25,12 @@ struct Cli {
     pub_key: String,
 }
 
-
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     let cli = Cli::parse();
 
     let mut file = File::open(cli.pub_key)?;
-    let mut pub_key = [0;32];
+    let mut pub_key = [0; 32];
     file.read_exact(&mut pub_key)?;
     println!("pub key: {:02x?}", pub_key);
 
@@ -39,8 +38,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let make_svc = make_service_fn(move |_conn| {
         let pub_key = pub_key.clone();
-        let service = service_fn(move |_req| {
-           async move { Ok::<_, Infallible>(Response::<Body>::new(enclave_server::get_attestation_doc(pub_key).into())) }
+        let service = service_fn(move |_req| async move {
+            Ok::<_, Infallible>(Response::<Body>::new(
+                enclave_server::get_attestation_doc(pub_key).into(),
+            ))
         });
         async move { Ok::<_, Infallible>(service) }
     });
