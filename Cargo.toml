@@ -4,6 +4,7 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
+aws-nitro-enclaves-nsm-api = "0.4.0"
 clap = { version = "4.0.18", features = ["derive"] }
 hyper = { version = "0.14", features = ["full"] }
 serde = { version = "1.0.150", features = ["derive"] }
