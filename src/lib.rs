@@ -27,3 +27,8 @@ pub fn get_attestation_doc(pub_key: &[u8]) -> Vec<u8> {
         _ => panic!("nsm driver returned invalid response: {:?}", response),
     }
 }
+
+pub fn get_hex_attestation_doc(pub_key: &[u8]) -> String {
+    let attestation = get_attestation_doc(pub_key);
+    return hex::encode(attestation);
+}
