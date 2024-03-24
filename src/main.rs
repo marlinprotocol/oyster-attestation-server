@@ -34,7 +34,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let make_svc = make_service_fn(|_conn| {
         let service = service_fn(|_req| async {
             Ok::<_, Infallible>(Response::<Body>::new(
-                oyster_attestation_server_ed25519::get_attestation_doc(pub_key).into(),
+                oyster_attestation_server::get_attestation_doc(pub_key).into(),
             ))
         });
         async move { Ok::<_, Infallible>(service) }
