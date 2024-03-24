@@ -1,12 +1,7 @@
-use std::convert::Infallible;
 use std::error::Error;
-use std::net::SocketAddr;
-use std::str::FromStr;
 
 use axum::{routing::get, Router};
 use clap::Parser;
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Response, Server};
 
 /// http server for handling attestation document requests
 #[derive(Parser)]
