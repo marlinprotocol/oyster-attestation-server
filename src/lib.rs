@@ -9,7 +9,7 @@ struct EnclaveConfig {
     total_cpus: usize,
 }
 
-pub fn get_attestation_doc(pub_key: [u8; 32]) -> Vec<u8> {
+pub fn get_attestation_doc(pub_key: &[u8]) -> Vec<u8> {
     let nsm_fd = nsm_driver::nsm_init();
 
     let public_key = ByteBuf::from(pub_key);
