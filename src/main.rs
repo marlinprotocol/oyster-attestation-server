@@ -30,10 +30,15 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let pub_key = std::fs::read(cli.pub_key)?.leak::<'static>();
     println!("pub key: {:02x?}", pub_key);
 
-    let app = Router::new().route(
-        "/attestation/raw",
-        get(|| async { oyster_attestation_server::get_attestation_doc(pub_key) }),
-    );
+    let app = Router::new()
+        .route(
+            "/attestation/raw",
+            get(|| async { oyster_attestation_server::get_attestation_doc(pub_key) }),
+        )
+        .route(
+            "/attestation/hex",
+            get(|| async { oyster_attestation_server::get_hex_attestation_doc(pub_key) }),
+        );
     let listener = tokio::net::TcpListener::bind(&cli.ip_addr).await?;
 
     axum::serve(listener, app).await?;
