@@ -3,6 +3,7 @@ use std::error::Error;
 use std::net::SocketAddr;
 use std::str::FromStr;
 
+use axum::{routing::get, Router};
 use clap::Parser;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Response, Server};
@@ -29,19 +30,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let pub_key = std::fs::read(cli.pub_key)?.leak::<'static>();
     println!("pub key: {:02x?}", pub_key);
 
-    let addr = SocketAddr::from_str(&cli.ip_addr)?;
+    let app = Router::new().route(
+        "/attestation/raw",
+        get(|| async { oyster_attestation_server::get_attestation_doc(pub_key) }),
+    );
+    let listener = tokio::net::TcpListener::bind(&cli.ip_addr).await?;
 
-    let make_svc = make_service_fn(|_conn| {
-        let service = service_fn(|_req| async {
-            Ok::<_, Infallible>(Response::<Body>::new(
-                oyster_attestation_server::get_attestation_doc(pub_key).into(),
-            ))
-        });
-        async move { Ok::<_, Infallible>(service) }
-    });
+    axum::serve(listener, app).await?;
 
-    let server = Server::bind(&addr).serve(make_svc);
-
-    server.await?;
     Ok(())
 }
