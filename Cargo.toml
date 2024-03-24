@@ -1,5 +1,5 @@
 [package]
-name = "oyster-attestation-server-ed25519"
+name = "oyster-attestation-server"
 version = "1.0.0"
 edition = "2021"
 
