@@ -7,11 +7,11 @@ use clap::Parser;
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
-    /// ip address of the server
+    /// ip address of the server (e.g. 127.0.0.1:1300)
     #[arg(short, long)]
     ip_addr: String,
 
-    /// path to public key file
+    /// path to public key file (e.g. /app/id.pub)
     #[arg(short, long)]
     pub_key: String,
 }
