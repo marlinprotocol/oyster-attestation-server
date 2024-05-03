@@ -1,6 +1,7 @@
 use std::error::Error;
 
-use axum::{routing::get, Router};
+use axum::{http::Method, routing::get, Router};
+use tower_http::cors::{Any,CorsLayer};
 use clap::Parser;
 
 /// http server for handling attestation document requests
@@ -25,6 +26,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let pub_key = std::fs::read(cli.pub_key)?.leak::<'static>();
     println!("pub key: {:02x?}", pub_key);
 
+    let cors = CorsLayer::new()
+    .allow_methods([Method::GET, Method::POST])
+    .allow_origin(Any);
+
     let app = Router::new()
         .route(
             "/attestation/raw",
@@ -33,7 +38,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .route(
             "/attestation/hex",
             get(|| async { oyster_attestation_server::get_hex_attestation_doc(pub_key) }),
-        );
+        ).layer(cors);
     let listener = tokio::net::TcpListener::bind(&cli.ip_addr).await?;
 
     axum::serve(listener, app).await?;
