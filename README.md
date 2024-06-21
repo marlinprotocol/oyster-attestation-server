@@ -10,11 +10,27 @@ The attestation server generates attestations using the AWS Nitro Secure Module 
 cargo build --release
 ```
 
+### Reproducible builds
+
+Reproducible builds can be done using a Rust Docker image to standardize the build environment:
+
+```bash
+# For amd64
+docker run --rm -v `pwd`:/code rust@sha256:ed7795c6eaccae53be35939e883e8c3de0197b21e8eddbd9f04b0c4bc757c094 /code/build-amd64.sh
+
+# For arm64
+docker run --rm -v `pwd`:/code rust@sha256:c428882ff081342a9661fb13a1d059ecdc0b6e979ffec64b80371cf20a2088b0 /code/build-arm64.sh
+```
+
+The prebuilt binaries are then compressed using `upx` version 4.2.4. Expected sha256 checksums are available along with the links to the prebuilt binaries.
+
 ## Prebuilt binaries
 
 amd64: http://public.artifacts.marlin.pro/projects/enclaves/attestation-server_v2.0.0_linux_amd64
+checksum: b05852fa4ebda4d9a88ab2b61deae5f22b7026f4d99c5eeeca3c31ee99a77a71
 
 arm64: http://public.artifacts.marlin.pro/projects/enclaves/attestation-server_v2.0.0_linux_arm64
+checksum: 4be991730c3665ebd3d5a49f9514c34da9f4d2624ca15ee54b76258f8623cf49
 
 ## Usage
 
