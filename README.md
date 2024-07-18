@@ -26,10 +26,10 @@ The prebuilt binaries are then compressed using `upx` version 4.2.4. Expected sh
 
 ## Prebuilt binaries
 
-amd64: http://public.artifacts.marlin.pro/projects/enclaves/attestation-server_v2.0.0_linux_amd64 \
+amd64: https://artifacts.marlin.org/oyster/binaries/attestation-server_v2.0.0_linux_amd64 \
 checksum: b05852fa4ebda4d9a88ab2b61deae5f22b7026f4d99c5eeeca3c31ee99a77a71
 
-arm64: http://public.artifacts.marlin.pro/projects/enclaves/attestation-server_v2.0.0_linux_arm64 \
+arm64: https://artifacts.marlin.org/oyster/binaries/attestation-server_v2.0.0_linux_arm64 \
 checksum: 4be991730c3665ebd3d5a49f9514c34da9f4d2624ca15ee54b76258f8623cf49
 
 ## Usage
