@@ -1,5 +1,9 @@
 ![Marlin Oyster Logo](./logo.svg)
 
+# Archival
+
+Archived in favour of https://github.com/marlinprotocol/oyster-monorepo
+
 # Attestation Server
 
 The attestation server generates attestations using the AWS Nitro Secure Module (NSM) API and makes them available using a HTTP server. It includes a public key that can be used to extend the chain of trust of the attestation by other enclave applications. Intended to be run inside an enclave.
